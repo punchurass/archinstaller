@@ -1,5 +1,5 @@
 # archinstaller
-Simple script to instal Arch Linux with a GUI
+Simple script to install Arch Linux with a GUI
 
 *I strongly reccomend editing the scripts BEFORE running them*
 
