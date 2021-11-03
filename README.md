@@ -10,5 +10,5 @@ Simple script to instal Arch Linux with a GUI
 <br>run 'bash /INSTALL/install_begin.sh'</br>
 
 Projects used in this script:
-<a href="https://github.com/tenacityteam/tenacity">Tenacity</a>
+<a href="https://github.com/tenacityteam/tenacity">Tenacity</a>,
 <a href="https://github.com/wxWidgets/wxWidgets">WxWidgets</a>
