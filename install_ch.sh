@@ -63,7 +63,8 @@ brother-mfc-9560cdw thunar-megasync-bin megasync-bin"
 
 #Install Tenacity
 cp -r /INSTALL/wxgtk-dev /opt
-cp -r /INSTALL/tenacity-git /home/$INSTALL_USER
+mkdir /home/$INSTALL_USER/tenacity-git
+cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
 chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
 cd /home/$INSTALL_USER/tenacity-git
 su $INSTALL_USER -c "makepkg -si"
