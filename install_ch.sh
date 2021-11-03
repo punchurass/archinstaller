@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #CONFIGURE
-INSTALL_USER=miku
-INSTALL_USER_FRIENDLYNAME="Hatsune Miku"
+INSTALL_USER=mumei
+INSTALL_USER_FRIENDLYNAME="Nanashi Mumei"
 INSTALL_HOSTNAME="Watashi-wa-Mushinronshadesu"
 
 #Go to root DIR
