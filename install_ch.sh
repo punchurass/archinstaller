@@ -49,7 +49,7 @@ pacman -Sy
 su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
 cmake gthumb ffmpeg firewalld networkmanager \
 gimp network-manager-applet cups gvfs gvfs-smb \
-htop pulseaudio pavucontrol lshw lvm2 bluez \
+htop pulseaudio pavucontrol gparted lshw lvm2 bluez \
 make neofetch nm-connection-editor openssh xdotool \
 python samba tar p7zip wireguard-tools vlc \
 xorg compsize zip torbrowser-launcher unzip zsh wget \
