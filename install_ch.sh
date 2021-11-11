@@ -145,7 +145,7 @@ if [ $DESKTOPENV = "none" ]; then
 fi
 
 #Install Tenacity
-echo "Would you like to install Tenacity? (Y/N)"
+echo "Would you like to install Tenacity? (audio editor) (Y/N)"
 read TENACITY_CONSENT
 
 if [ $TENACITY_CONSENT = "y" ]; then
