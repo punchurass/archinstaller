@@ -1,16 +1,16 @@
 #!/usr/bin/bash
 #Warning
-echo "|--- ALL DATA ON /dev/sda WILL BE DESTROYED!     ---|"
-echo "|---                                             ---|"
-echo "|--- PLEASE READ THIS BEFORE RUNNING THIS SCRIPT ---|"
-echo "|--- The installer options (such as username and ---|"
-echo "|--- hostname) can be changed by editing this    ---|"
-echo "|--- file. This script also assumes that the     ---|"
-echo "|--- installation media is encrypted. Please     ---|"
-echo "|--- edit the script before running.             ---|"
-echo "|---  [CTRL+C to exit]   [Waiting 15 seconds]    ---|"
-echo "|--- run 'nano /INSTALL/install-ch.sh' to edit   ---|"
-sleep 15
+echo "|--- ALL DATA ON /dev/sda WILL BE DESTROYED!           ---|"
+echo "|---                                                   ---|"
+echo "|--- PLEASE READ THIS BEFORE RUNNING THIS SCRIPT       ---|"
+echo "|--- The installer options (such as username and       ---|"
+echo "|--- hostname) can be changed by editing this          ---|"
+echo "|--- file. This script also assumes that the           ---|"
+echo "|--- installation media is encrypted. Please           ---|"
+echo "|--- edit the script before running.                   ---|"
+echo "|---  [CTRL+C to exit]   [Waiting 5 seconds]           ---|"
+echo "|--- run 'nano /archinstaller/install-ch.sh' to edit   ---|"
+sleep 5
 
 #making partitions
 parted -s /dev/sda \
@@ -54,10 +54,10 @@ pacstrap /mnt base base-devel linux linux-firmware linux-headers grub git nano z
 genfstab -U /mnt >> /mnt/etc/fstab
 
 #copy installation files to installation root directory
-cp -r /INSTALL/ /mnt/INSTALL
+cp -r /archinstaller/ /mnt/archinstaller
 
 #Run part II of the script
-arch-chroot /mnt bash /INSTALL/install_ch.sh
+arch-chroot /mnt bash /archinstaller/install_ch.sh
 
 #Reboot
 reboot

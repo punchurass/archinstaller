@@ -44,7 +44,7 @@ su $INSTALL_USER -c "makepkg -si"
 cd /home/$INSTALL_USER
 
 #Install packages
-cp /INSTALL/pacman.conf /etc/pacman.conf
+cp /archinstaller/pacman.conf /etc/pacman.conf
 pacman -Sy
 su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
 cmake gthumb ffmpeg firewalld networkmanager \
@@ -150,9 +150,9 @@ read TENACITY_CONSENT
 
 if [ $TENACITY_CONSENT = 'y' ]; then
     echo 'Installing Tenacity'
-    cp -r /INSTALL/wxgtk-dev /opt
+    cp -r /archinstaller/wxgtk-dev /opt
     mkdir /home/$INSTALL_USER/tenacity-git
-    cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
+    cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
     chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
     cd /home/$INSTALL_USER/tenacity-git
     su $INSTALL_USER -c "makepkg -si"
@@ -160,9 +160,9 @@ fi
 
 if [ $TENACITY_CONSENT = 'Y' ]; then
     echo 'Installing Tenacity'
-    cp -r /INSTALL/wxgtk-dev /opt
+    cp -r /archinstaller/wxgtk-dev /opt
     mkdir /home/$INSTALL_USER/tenacity-git
-    cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
+    cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
     chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
     cd /home/$INSTALL_USER/tenacity-git
     su $INSTALL_USER -c "makepkg -si"
@@ -208,9 +208,9 @@ chmod 000 /crypto_keyfile.bin
 
 #Patch configuration files (assuming the root volume is encrypted)
 rm /etc/sudoers
-cp /INSTALL/sudoers /INSTALL/mkinitcpio.conf /INSTALL/nanorc /etc
+cp /archinstaller/sudoers /archinstaller/mkinitcpio.conf /archinstaller/nanorc /etc
 rm /etc/default/grub
-cp /INSTALL/default/grub /etc/default 
+cp /archinstaller/default/grub /etc/default
 
 #Install GRUB
 grub-install /dev/sda
@@ -224,7 +224,7 @@ timedatectl set-ntp 1
 
 #Clean Up
 rm -r /var/cache
-rm -r /INSTALL/
+rm -r /archinstaller/
 rm -r /home/$INSTALL_USER/yay
 ln -s /opt/wxgtk-dev/lib/* /lib
 
