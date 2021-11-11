@@ -44,30 +44,129 @@ su $INSTALL_USER -c "makepkg -si"
 cd /home/$INSTALL_USER
 
 #Install packages
-echo "[multilib]" >> /etc/pacman.conf
-echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+cp /INSTALL/pacman.conf /etc/pacman.conf
 pacman -Sy
-su $INSTALL_USER -c "yay -S wine wine-mono curl bluez \
+su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
 cmake gthumb ffmpeg firewalld networkmanager \
-gimp gnome-calculator network-manager-applet cups gvfs gvfs-smb \
-htop pulseaudio pavucontrol lshw lvm2 \
-make mousepad neofetch nm-connection-editor openssh \
+gimp network-manager-applet cups gvfs gvfs-smb \
+htop pulseaudio pavucontrol lshw lvm2 curl bluez \
+make neofetch nm-connection-editor openssh xdotool \
 python samba tar p7zip wireguard-tools vlc \
-xorg compsize zip unzip zsh thunar wget transmission-gtk \
-tree curl openresolv firefox cronie libreoffice-fresh \
-pulseaudio-bluetooth pulseaudio-alsa python-pip \
-gnome conan p7zip-gui wireguard-dkms \
-tor-browser spotify-adblock-git \
-networkmanager-wireguard realvnc-vnc-viewer \
-brother-mfc-9560cdw thunar-megasync-bin megasync-bin"
+xorg compsize zip torbrowser-launcher unzip zsh wget \
+transmission-gtk tree curl openresolv firefox cronie \
+libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa \
+python-pip conan p7zip-gui spotify-adblock-git \
+realvnc-vnc-viewer"
+
+#Install DE
+echo "What Desktop Environment do you want installed? (all lowercase)"
+echo "(gnome, plasma, xfce4, i3, none)"
+read DESKTOPENV
+
+echo 'Install MEGAsync? (cloud storage) (Y/N)'
+read MEGACONSENT
+
+if [ $DESKTOPENV = 'gnome' ]; then
+    echo "Installing GNOME"
+    pacman -S gnome
+    if [ $MEGACONSENT = 'y' ]; then
+        echo "Installing MEGAsync"
+        su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
+    else
+        if [ $MEGACONSENT = 'Y' ]; then
+            echo "Installing MEGAsync"
+            su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
+        else
+            echo "Not installing MEGAsync"
+        fi
+    fi
+fi
+
+if [ $DESKTOPENV = 'plasma' ]; then
+    echo "Installing KDE Plasma"
+    pacman -S plasma kate konsole dolphin
+    if [ $MEGACONSENT = 'y' ]; then
+        echo "Installing MEGAsync"
+        su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
+    else
+        if [ $MEGACONSENT = 'Y' ]; then
+            echo "Installing MEGAsync"
+            su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
+        else
+            echo "Not installing MEGAsync"
+        fi
+    fi
+fi
+
+if [ $DESKTOPENV = 'xfce4' ]; then
+
+    echo "Installing xfce4"
+    pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter
+    if [ $MEGACONSENT = 'y' ]; then
+        echo "Installing MEGAsync"
+        su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+    else
+        if [ $MEGACONSENT = 'Y' ]; then
+            echo "Installing MEGAsync"
+            su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+        else
+            echo "Not installing MEGAsync"
+        fi
+    fi
+fi
+
+if [ $DESKTOPENV = 'i3' ]; then
+    echo "Installing i3"
+    pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter
+    if [ $MEGACONSENT = 'y' ]; then
+        echo "Installing MEGAsync"
+        su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+    else
+        if [ $MEGACONSENT = 'Y' ]; then
+            echo "Installing MEGAsync"
+            su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+        else
+            echo "Not installing MEGAsync"
+        fi
+    fi
+fi
+
+if [ $DESKTOPENV = 'none' ]; then
+    echo "Not installing a Desktop Environment"
+    if [ $MEGACONSENT = 'y' ]; then
+        echo "MEGAsync is GUI only."
+    else
+        if [ $MEGACONSENT = 'Y' ]; then
+            echo "MEGAsync is GUI only."
+        else
+            echo "Not installing MEGAsync"
+        fi
+    fi
+fi
 
 #Install Tenacity
-cp -r /INSTALL/wxgtk-dev /opt
-mkdir /home/$INSTALL_USER/tenacity-git
-cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
-chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
-cd /home/$INSTALL_USER/tenacity-git
-su $INSTALL_USER -c "makepkg -si"
+echo "Would you like to install Tenacity? (Y/N)"
+read TENACITY_CONSENT
+
+if [ $TENACITY_CONSENT = 'y' ]; then
+    echo 'Installing Tenacity'
+    cp -r /INSTALL/wxgtk-dev /opt
+    mkdir /home/$INSTALL_USER/tenacity-git
+    cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
+    chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
+    cd /home/$INSTALL_USER/tenacity-git
+    su $INSTALL_USER -c "makepkg -si"
+fi
+
+if [ $TENACITY_CONSENT = 'Y' ]; then
+    echo 'Installing Tenacity'
+    cp -r /INSTALL/wxgtk-dev /opt
+    mkdir /home/$INSTALL_USER/tenacity-git
+    cp -r /INSTALL/PKGBUILD /home/$INSTALL_USER/tenacity-git
+    chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
+    cd /home/$INSTALL_USER/tenacity-git
+    su $INSTALL_USER -c "makepkg -si"
+fi
 
 #Return to root
 cd /
@@ -80,9 +179,27 @@ chmod a+rx /usr/local/bin/yt-dlp
 systemctl enable bluetooth.service
 systemctl enable cups.service
 systemctl enable cronie.service
-systemctl enable gdm.service
+systemctl enable sddm.service
 systemctl enable firewalld.service
 systemctl enable NetworkManager.service
+systemctl enable tor
+systemctl enable usbmuxd
+
+if [ $DESKTOPENV = 'gnome' ]; then
+    systemctl enable gdm
+fi
+
+if [ $DESKTOPENV = 'plasma' ]; then
+    systemctl enable sddm
+fi
+
+if [ $DESKTOPENV = 'xfce4' ]; then
+    systemctl enable lightdm
+fi
+
+if [ $DESKTOPENV = 'i3' ]; then
+    systemctl enable lightdm
+fi
 
 #Create Key for lvm2 volume
 dd bs=1024 count=4 if=/dev/urandom of=/crypto_keyfile.bin
