@@ -49,7 +49,11 @@ pacman -Sy
 su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
 cmake gthumb ffmpeg firewalld networkmanager \
 gimp network-manager-applet cups gvfs gvfs-smb \
+<<<<<<< HEAD
+htop pulseaudio pavucontrol lshw lvm2 bluez \
+=======
 htop pulseaudio pavucontrol lshw lvm2 curl bluez \
+>>>>>>> 248ad12e56be221c86d9ed365ceb24800a1e3c99
 make neofetch nm-connection-editor openssh xdotool \
 python samba tar p7zip wireguard-tools vlc \
 xorg compsize zip torbrowser-launcher unzip zsh wget \
@@ -60,7 +64,11 @@ realvnc-vnc-viewer"
 
 #Install DE
 echo "What Desktop Environment do you want installed? (all lowercase)"
+<<<<<<< HEAD
+echo "(gnome, kdeplasma, xfce4, i3, none)"
+=======
 echo "(gnome, plasma, xfce4, i3, none)"
+>>>>>>> 248ad12e56be221c86d9ed365ceb24800a1e3c99
 read DESKTOPENV
 
 echo 'Install MEGAsync? (cloud storage) (Y/N)'
@@ -82,7 +90,11 @@ if [ $DESKTOPENV = 'gnome' ]; then
     fi
 fi
 
+<<<<<<< HEAD
+if [ $DESKTOPENV = 'kdeplasma' ]; then
+=======
 if [ $DESKTOPENV = 'plasma' ]; then
+>>>>>>> 248ad12e56be221c86d9ed365ceb24800a1e3c99
     echo "Installing KDE Plasma"
     pacman -S plasma kate konsole dolphin
     if [ $MEGACONSENT = 'y' ]; then
