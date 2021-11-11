@@ -8,19 +8,19 @@ INSTALL_HOSTNAME="Watashi-wa-Mushinronshadesu"
 cd /
 
 #Set Locale
-ln -sf '/usr/share/zoneinfo/America/Toronto' '/etc/localtime'
+ln -sf "/usr/share/zoneinfo/America/Toronto" "/etc/localtime"
 hwclock --systohc
 rm /etc/locale.gen
-echo 'en_CA.UTF-8 UTF-8' >> /etc/locale.gen
-echo 'en_CA ISO-8859-1' >> /etc/locale.gen
-echo 'LANG=en_CA.UTF-8' >> /etc/locale.conf
+echo "en_CA.UTF-8 UTF-8" >> /etc/locale.gen
+echo "en_CA ISO-8859-1" >> /etc/locale.gen
+echo "LANG=en_CA.UTF-8" >> /etc/locale.conf
 locale-gen
 
 #Set Networking
-echo '$INSTALL_HOSTNAME' >> /etc/hostname
-echo '127.0.0.1 localhost' >> /etc/hosts
-echo '::1 localhost' >> /etc/hosts
-echo '127.0.1.1 $INSTALL_HOSTNAME.localdomain $INSTALL_HOSTNAME' >> /etc/hosts
+echo "$INSTALL_HOSTNAME" >> /etc/hostname
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1 localhost" >> /etc/hosts
+echo "127.0.1.1 $INSTALL_HOSTNAME.localdomain $INSTALL_HOSTNAME" >> /etc/hosts
 
 #Add User
 mkdir /home/$INSTALL_USER
@@ -33,8 +33,8 @@ usermod -a -G wheel $INSTALL_USER
 	passwd $INSTALL_USER
 
 #Install pacman wrapper (yay)
-git clone 'https://aur.archlinux.org/yay.git'
-echo '%wheel ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+git clone "https://aur.archlinux.org/yay.git"
+echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 cd yay
 pacman-key --populate archlinux
 chown $INSTALL_USER /home/$INSTALL_USER -R
@@ -63,17 +63,17 @@ echo "What Desktop Environment do you want installed? (all lowercase)"
 echo "(gnome, kdeplasma, xfce4, i3, none)"
 read DESKTOPENV
 
-echo 'Install MEGAsync? (cloud storage) (Y/N)'
+echo "Install MEGAsync? (cloud storage) (Y/N)"
 read MEGACONSENT
 
-if [ $DESKTOPENV = 'gnome' ]; then
+if [ $DESKTOPENV = "gnome" ]; then
     echo "Installing GNOME"
     pacman -S gnome
-    if [ $MEGACONSENT = 'y' ]; then
+    if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
     else
-        if [ $MEGACONSENT = 'Y' ]; then
+        if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
             su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
         else
@@ -82,14 +82,14 @@ if [ $DESKTOPENV = 'gnome' ]; then
     fi
 fi
 
-if [ $DESKTOPENV = 'kdeplasma' ]; then
+if [ $DESKTOPENV = "kdeplasma" ]; then
     echo "Installing KDE Plasma"
     pacman -S plasma kate konsole dolphin
-    if [ $MEGACONSENT = 'y' ]; then
+    if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
     else
-        if [ $MEGACONSENT = 'Y' ]; then
+        if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
             su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
         else
@@ -98,15 +98,15 @@ if [ $DESKTOPENV = 'kdeplasma' ]; then
     fi
 fi
 
-if [ $DESKTOPENV = 'xfce4' ]; then
+if [ $DESKTOPENV = "xfce4" ]; then
 
     echo "Installing xfce4"
     pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter
-    if [ $MEGACONSENT = 'y' ]; then
+    if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
     else
-        if [ $MEGACONSENT = 'Y' ]; then
+        if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
             su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
         else
@@ -115,14 +115,14 @@ if [ $DESKTOPENV = 'xfce4' ]; then
     fi
 fi
 
-if [ $DESKTOPENV = 'i3' ]; then
+if [ $DESKTOPENV = "i3" ]; then
     echo "Installing i3"
     pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter
-    if [ $MEGACONSENT = 'y' ]; then
+    if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
     else
-        if [ $MEGACONSENT = 'Y' ]; then
+        if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
             su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
         else
@@ -131,12 +131,12 @@ if [ $DESKTOPENV = 'i3' ]; then
     fi
 fi
 
-if [ $DESKTOPENV = 'none' ]; then
+if [ $DESKTOPENV = "none" ]; then
     echo "Not installing a Desktop Environment"
-    if [ $MEGACONSENT = 'y' ]; then
+    if [ $MEGACONSENT = "y" ]; then
         echo "MEGAsync is GUI only."
     else
-        if [ $MEGACONSENT = 'Y' ]; then
+        if [ $MEGACONSENT = "Y" ]; then
             echo "MEGAsync is GUI only."
         else
             echo "Not installing MEGAsync"
@@ -148,8 +148,8 @@ fi
 echo "Would you like to install Tenacity? (Y/N)"
 read TENACITY_CONSENT
 
-if [ $TENACITY_CONSENT = 'y' ]; then
-    echo 'Installing Tenacity'
+if [ $TENACITY_CONSENT = "y" ]; then
+    echo "Installing Tenacity"
     cp -r /archinstaller/wxgtk-dev /opt
     mkdir /home/$INSTALL_USER/tenacity-git
     cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
@@ -158,8 +158,8 @@ if [ $TENACITY_CONSENT = 'y' ]; then
     su $INSTALL_USER -c "makepkg -si"
 fi
 
-if [ $TENACITY_CONSENT = 'Y' ]; then
-    echo 'Installing Tenacity'
+if [ $TENACITY_CONSENT = "Y" ]; then
+    echo "Installing Tenacity"
     cp -r /archinstaller/wxgtk-dev /opt
     mkdir /home/$INSTALL_USER/tenacity-git
     cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
@@ -184,19 +184,19 @@ systemctl enable NetworkManager.service
 systemctl enable tor
 systemctl enable usbmuxd
 
-if [ $DESKTOPENV = 'gnome' ]; then
+if [ $DESKTOPENV = "gnome" ]; then
     systemctl enable gdm
 fi
 
-if [ $DESKTOPENV = 'kdeplasma' ]; then
+if [ $DESKTOPENV = "kdeplasma" ]; then
     systemctl enable sddm
 fi
 
-if [ $DESKTOPENV = 'xfce4' ]; then
+if [ $DESKTOPENV = "xfce4" ]; then
     systemctl enable lightdm
 fi
 
-if [ $DESKTOPENV = 'i3' ]; then
+if [ $DESKTOPENV = "i3" ]; then
     systemctl enable lightdm
 fi
 
