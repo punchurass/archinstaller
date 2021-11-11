@@ -50,7 +50,6 @@ su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
 cmake gthumb ffmpeg firewalld networkmanager \
 gimp network-manager-applet cups gvfs gvfs-smb \
 htop pulseaudio pavucontrol lshw lvm2 bluez \
-htop pulseaudio pavucontrol lshw lvm2 curl bluez \
 make neofetch nm-connection-editor openssh xdotool \
 python samba tar p7zip wireguard-tools vlc \
 xorg compsize zip torbrowser-launcher unzip zsh wget \
@@ -84,8 +83,6 @@ if [ $DESKTOPENV = 'gnome' ]; then
 fi
 
 if [ $DESKTOPENV = 'kdeplasma' ]; then
-=======
-if [ $DESKTOPENV = 'plasma' ]; then
     echo "Installing KDE Plasma"
     pacman -S plasma kate konsole dolphin
     if [ $MEGACONSENT = 'y' ]; then
@@ -182,7 +179,6 @@ chmod a+rx /usr/local/bin/yt-dlp
 systemctl enable bluetooth.service
 systemctl enable cups.service
 systemctl enable cronie.service
-systemctl enable sddm.service
 systemctl enable firewalld.service
 systemctl enable NetworkManager.service
 systemctl enable tor
@@ -192,7 +188,7 @@ if [ $DESKTOPENV = 'gnome' ]; then
     systemctl enable gdm
 fi
 
-if [ $DESKTOPENV = 'plasma' ]; then
+if [ $DESKTOPENV = 'kdeplasma' ]; then
     systemctl enable sddm
 fi
 
