@@ -152,7 +152,7 @@ fi
 
 if [ $DESKTOPENV = "kdeplasma" ]; then
     echo "Installing KDE Plasma"
-    pacman -S plasma kate konsole dolphin print-manager xorg --needed
+    pacman -S plasma dolphin kde-utilities xorg --needed
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
