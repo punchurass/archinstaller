@@ -8,9 +8,9 @@ echo "|--- hostname) can be changed by editing this          ---|"
 echo "|--- file. This script also assumes that the           ---|"
 echo "|--- installation media is encrypted. Please           ---|"
 echo "|--- edit the script before running.                   ---|"
-echo "|---  [CTRL+C to exit]   [Waiting 5 seconds]           ---|"
+echo "|---  [CTRL+C to exit]   [Enter to continue]           ---|"
 echo "|--- run 'nano /archinstaller/install-ch.sh' to edit   ---|"
-sleep 5
+read
 
 #making partitions
 parted -s /dev/sda \

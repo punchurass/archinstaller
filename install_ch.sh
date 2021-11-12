@@ -1,14 +1,53 @@
 #!/usr/bin/bash
+if [ $(whoami) = "root" ]; then
+    echo "You are root."
+else
+    echo "You are not root."
+    exit
+fi
 #CONFIGURE
 INSTALL_USER=mumei
 INSTALL_USER_FRIENDLYNAME="Nanashi Mumei"
 INSTALL_HOSTNAME="Watashi-wa-Mushinronshadesu"
 
+echo username is $INSTALL_USER
+echo user full name is $INSTALL_USER_FRIENDLYNAME
+echo hostname is $INSTALL_HOSTNAME
+echo "Are these settings correct? (Y/N)"
+read $HOSTCONFIRM
+
+if [ $HOSTCONFIRM = "y" ]; then
+    echo "Username:"
+    read INSTALL_USER
+    echo "User full name:"
+    read INSTALL_USER_FRIENDLYNAME
+    echo "Hostname:"
+    read INSTALL_HOSTNAME
+else
+    if [ $HOSTCONFIRM = "Y" ]; then
+        echo "Username:"
+        read INSTALL_USER
+        echo "User full name:"
+        read INSTALL_USER_FRIENDLYNAME
+        echo "Hostname:"
+        read INSTALL_HOSTNAME
+    fi
+fi
+
+echo "It is too late to go back now!"
+
 #Go to root DIR
 cd /
 
 #Set Locale
-ln -sf "/usr/share/zoneinfo/America/Toronto" "/etc/localtime"
+
+echo "What continent do you live in? (Africa, America, Antarctica, Asia, Australia, Europe)"
+read CONTINENT
+ls /usr/share/zoneinfo/$CONTINENT
+echo "Out of these choices, what city corresponds to your timezone?"
+read CITY
+
+ln -sf "/usr/share/zoneinfo/$CONTINENT/$CITY" "/etc/localtime"
 hwclock --systohc
 rm /etc/locale.gen
 echo "en_CA.UTF-8 UTF-8" >> /etc/locale.gen
@@ -20,7 +59,7 @@ locale-gen
 echo "$INSTALL_HOSTNAME" >> /etc/hostname
 echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1 localhost" >> /etc/hosts
-echo "127.0.1.1 $INSTALL_HOSTNAME.localdomain $INSTALL_HOSTNAME" >> /etc/hosts
+echo "127.0.1.1 $INSTALL_HOSTNAME" >> /etc/hosts
 
 #Add User
 mkdir /home/$INSTALL_USER
@@ -43,20 +82,49 @@ su $INSTALL_USER -c "makepkg -si"
 
 cd /home/$INSTALL_USER
 
-#Install packages
+#Install essential packages
 cp /archinstaller/pacman.conf /etc/pacman.conf
-pacman -Sy
-su $INSTALL_USER -c "yay -S flatpak wine wine-mono \
-cmake gthumb ffmpeg firewalld networkmanager \
-gimp network-manager-applet cups gvfs gvfs-smb \
-htop pulseaudio pavucontrol gparted lshw lvm2 bluez \
-make neofetch nm-connection-editor openssh xdotool \
-python samba tar p7zip wireguard-tools vlc \
-xorg compsize zip torbrowser-launcher unzip zsh wget \
-transmission-gtk tree curl openresolv firefox cronie \
-libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa \
-python-pip conan p7zip-gui spotify-adblock-git \
-realvnc-vnc-viewer"
+pacman -Sy cmake firewalld networkmanager htop lshw lvm2 \
+bluez make neofetch nm-connection-editor openssh python tar \
+p7zip python-pip unzip wget tree curl openresolv cronie
+
+echo "Install nonessential packages (Y/N)"
+read PACKAGECONSENT
+if [ $PACKAGECONSENT = "y" ]; then
+    pacman -S flatpak wine wine-mono ffmpeg gimp cups gvfs gvfs-smb \
+pulseaudio pavucontrol gparted xdotool samba vlc xorg compsize \
+zip torbrowser-launcher transmission-gtk firefox \
+libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa
+else
+    if [ $PACKAGECONSENT = "Y" ]; then
+        pacman -S flatpak wine wine-mono ffmpeg gimp cups gvfs gvfs-smb \
+pulseaudio pavucontrol gparted xdotool samba vlc xorg compsize \
+zip torbrowser-launcher transmission-gtk firefox \
+libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa
+    PACKAGECONSENT=y
+    fi
+fi
+
+su $INSTALL_USER -c "yay -S conan"
+su $INSTALL_USER -c "yay -S p7zip-gui"
+
+echo "Install Spotify? (Y/N)"
+read SPOTIFYCONSENT
+
+if [ $SPOTIFYCONSENT = "y" ]; then
+    su $INSTALL_USER -c "yay -S spotify-adblock-git"
+else
+    if [ $SPOTIFYCONSENT = "Y" ]; then
+        su $INSTALL_USER -c "yay -S spotify-adblock-git"
+    fi
+fi
+
+echo "Install a RealVNC Viewer? (Y/N)"
+read VNCCONSENT
+
+if [ $VNCCONSENT = "y" ]; then
+su $INSTALL_USER -c "yay -S realvnc-vnc-viewer"
+fi
 
 #Install DE
 echo "What Desktop Environment do you want installed? (all lowercase)"
@@ -68,7 +136,7 @@ read MEGACONSENT
 
 if [ $DESKTOPENV = "gnome" ]; then
     echo "Installing GNOME"
-    pacman -S gnome
+    pacman -S gnome xorg --needed
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
@@ -84,7 +152,7 @@ fi
 
 if [ $DESKTOPENV = "kdeplasma" ]; then
     echo "Installing KDE Plasma"
-    pacman -S plasma kate konsole dolphin
+    pacman -S plasma kate konsole dolphin print-manager xorg --needed
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
@@ -101,7 +169,7 @@ fi
 if [ $DESKTOPENV = "xfce4" ]; then
 
     echo "Installing xfce4"
-    pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter
+    pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter network-manager-applet xorg --needed
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
@@ -117,7 +185,7 @@ fi
 
 if [ $DESKTOPENV = "i3" ]; then
     echo "Installing i3"
-    pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter
+    pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter network-manager-applet xorg --needed
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
@@ -177,12 +245,17 @@ chmod a+rx /usr/local/bin/yt-dlp
 
 #Enable Essential Services
 systemctl enable bluetooth.service
-systemctl enable cups.service
-systemctl enable cronie.service
 systemctl enable firewalld.service
 systemctl enable NetworkManager.service
-systemctl enable tor
-systemctl enable usbmuxd
+systemctl enable sshd
+
+if [ $PACKAGECONSENT = "y" ]; then
+    systemctl enable tor
+    systemctl enable usbmuxd
+    systemctl enable cups.service
+    systemctl enable cronie.service
+
+fi
 
 if [ $DESKTOPENV = "gnome" ]; then
     systemctl enable gdm
