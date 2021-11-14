@@ -13,28 +13,7 @@ INSTALL_HOSTNAME="Watashi-wa-Mushinronshadesu"
 echo username is $INSTALL_USER
 echo user full name is $INSTALL_USER_FRIENDLYNAME
 echo hostname is $INSTALL_HOSTNAME
-echo "Are these settings correct? (Y/N)"
-read $HOSTCONFIRM
-
-if [ $HOSTCONFIRM = "y" ]; then
-    echo "Username:"
-    read INSTALL_USER
-    echo "User full name:"
-    read INSTALL_USER_FRIENDLYNAME
-    echo "Hostname:"
-    read INSTALL_HOSTNAME
-else
-    if [ $HOSTCONFIRM = "Y" ]; then
-        echo "Username:"
-        read INSTALL_USER
-        echo "User full name:"
-        read INSTALL_USER_FRIENDLYNAME
-        echo "Hostname:"
-        read INSTALL_HOSTNAME
-    fi
-fi
-
-echo "It is too late to go back now!"
+sleep 1
 
 #Go to root DIR
 cd /
@@ -72,10 +51,11 @@ usermod -a -G wheel $INSTALL_USER
 	passwd $INSTALL_USER
 
 #Install pacman wrapper (yay)
+pacman-key --populate archlinux
+pacman -S go --noconfirm
 git clone "https://aur.archlinux.org/yay.git"
 echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 cd yay
-pacman-key --populate archlinux
 chown $INSTALL_USER /home/$INSTALL_USER -R
 chmod 700 /home/$INSTALL_USER -R
 su $INSTALL_USER -c "makepkg -si"
@@ -86,7 +66,7 @@ cd /home/$INSTALL_USER
 cp /archinstaller/pacman.conf /etc/pacman.conf
 pacman -Sy cmake firewalld networkmanager htop lshw lvm2 \
 bluez make neofetch nm-connection-editor openssh python tar \
-p7zip python-pip unzip wget tree curl openresolv cronie
+p7zip python-pip unzip wget tree curl openresolv cronie --noconfirm
 
 echo "Install nonessential packages (Y/N)"
 read PACKAGECONSENT
@@ -94,19 +74,21 @@ if [ $PACKAGECONSENT = "y" ]; then
     pacman -S flatpak wine wine-mono ffmpeg gimp cups gvfs gvfs-smb \
 pulseaudio pavucontrol gparted xdotool samba vlc xorg compsize \
 zip torbrowser-launcher transmission-gtk firefox \
-libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa
+libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa --noconfirm
 else
     if [ $PACKAGECONSENT = "Y" ]; then
         pacman -S flatpak wine wine-mono ffmpeg gimp cups gvfs gvfs-smb \
 pulseaudio pavucontrol gparted xdotool samba vlc xorg compsize \
 zip torbrowser-launcher transmission-gtk firefox \
-libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa
+libreoffice-fresh pulseaudio-bluetooth pulseaudio-alsa --noconfirm
     PACKAGECONSENT=y
     fi
 fi
 
 su $INSTALL_USER -c "yay -S conan"
-su $INSTALL_USER -c "yay -S p7zip-gui"
+cd /archinstaller
+pacman -U p7zip-gui.pkg.tar.zst
+cd /
 
 echo "Install Spotify? (Y/N)"
 read SPOTIFYCONSENT
@@ -119,11 +101,11 @@ else
     fi
 fi
 
-echo "Install a RealVNC Viewer? (Y/N)"
+echo "Install a VNC Viewer? (Y/N)"
 read VNCCONSENT
 
 if [ $VNCCONSENT = "y" ]; then
-su $INSTALL_USER -c "yay -S realvnc-vnc-viewer"
+pacman -S remmina --noconfirm
 fi
 
 #Install DE
@@ -136,7 +118,7 @@ read MEGACONSENT
 
 if [ $DESKTOPENV = "gnome" ]; then
     echo "Installing GNOME"
-    pacman -S gnome xorg --needed
+    pacman -S gnome xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
@@ -152,7 +134,7 @@ fi
 
 if [ $DESKTOPENV = "kdeplasma" ]; then
     echo "Installing KDE Plasma"
-    pacman -S plasma dolphin kde-utilities xorg --needed
+    pacman -S plasma dolphin kde-utilities xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
@@ -169,7 +151,7 @@ fi
 if [ $DESKTOPENV = "xfce4" ]; then
 
     echo "Installing xfce4"
-    pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter network-manager-applet xorg --needed
+    pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter network-manager-applet xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
@@ -185,7 +167,7 @@ fi
 
 if [ $DESKTOPENV = "i3" ]; then
     echo "Installing i3"
-    pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter network-manager-applet xorg --needed
+    pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter network-manager-applet xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
         su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
@@ -218,22 +200,14 @@ read TENACITY_CONSENT
 
 if [ $TENACITY_CONSENT = "y" ]; then
     echo "Installing Tenacity"
-    cp -r /archinstaller/wxgtk-dev /opt
-    mkdir /home/$INSTALL_USER/tenacity-git
-    cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
-    chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
-    cd /home/$INSTALL_USER/tenacity-git
-    su $INSTALL_USER -c "makepkg -si"
+    cd /archinstaller
+    pacman -U tenacity-git.pkg.tar.zst wxbase-dev-light.pkg.tar.zst wxcommon-dev-light.pkg.tar.zst wxgtk2-dev-light.pkg.tar.zst wxgtk3-dev-light.pkg.tar.zst --noconfirm
 fi
 
 if [ $TENACITY_CONSENT = "Y" ]; then
     echo "Installing Tenacity"
-    cp -r /archinstaller/wxgtk-dev /opt
-    mkdir /home/$INSTALL_USER/tenacity-git
-    cp -r /archinstaller/PKGBUILD /home/$INSTALL_USER/tenacity-git
-    chown -R $INSTALL_USER:$INSTALL_USER /home/$INSTALL_USER/tenacity-git
-    cd /home/$INSTALL_USER/tenacity-git
-    su $INSTALL_USER -c "makepkg -si"
+    cd /archinstaller
+    pacman -U tenacity-git.pkg.tar.zst wxbase-dev-light.pkg.tar.zst wxcommon-dev-light.pkg.tar.zst wxgtk2-dev-light.pkg.tar.zst wxgtk3-dev-light.pkg.tar.zst --noconfirm
 fi
 
 #Return to root
@@ -254,7 +228,7 @@ if [ $PACKAGECONSENT = "y" ]; then
     systemctl enable usbmuxd
     systemctl enable cups.service
     systemctl enable cronie.service
-
+    systemctl enable printer.target
 fi
 
 if [ $DESKTOPENV = "gnome" ]; then
@@ -275,6 +249,8 @@ fi
 
 #Create Key for lvm2 volume
 dd bs=1024 count=4 if=/dev/urandom of=/crypto_keyfile.bin
+echo
+echo "Enter your hard disk password."
 cryptsetup luksAddKey /dev/sda2 /crypto_keyfile.bin
 chmod 000 /crypto_keyfile.bin
 

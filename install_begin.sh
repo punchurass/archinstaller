@@ -9,8 +9,11 @@ echo "|--- file. This script also assumes that the           ---|"
 echo "|--- installation media is encrypted. Please           ---|"
 echo "|--- edit the script before running.                   ---|"
 echo "|---  [CTRL+C to exit]   [Enter to continue]           ---|"
-echo "|--- run 'nano /archinstaller/install-ch.sh' to edit   ---|"
+echo "|--- run 'nano /archinstaller/install_ch.sh' to edit   ---|"
 read
+
+#unmount the thumb drive if still mounted
+umount -R /mnt
 
 #making partitions
 parted -s /dev/sda \
@@ -29,22 +32,22 @@ cryptsetup open --type luks /dev/sda2 lvm
 
 #create the lvm2 virtual volumes
 pvcreate /dev/mapper/lvm
-vgcreate vg /dev/mapper/lvm
-lvcreate -L 8G vg -n swap
-lvcreate -L 30G vg -n root
-lvcreate -l 100%FREE vg -n home
+vgcreate vgcrypt /dev/mapper/lvm
+lvcreate -L 8G vgcrypt -n swap
+lvcreate -L 30G vgcrypt -n root
+lvcreate -l 100%FREE vgcrypt -n home
 
 #format the volumes
 mkfs.ext4 /dev/sda1
-mkfs.ext4 /dev/mapper/vg-root
-mkfs.ext4 /dev/mapper/vg-home
-mkswap /dev/mapper/vg-swap
+mkfs.ext4 /dev/mapper/vgcrypt-root
+mkfs.ext4 /dev/mapper/vgcrypt-home
+mkswap /dev/mapper/vgcrypt-swap
 
 #mount volumes
-swapon -s /dev/mapper/vg-swap
-mount /dev/mapper/vg-root /mnt
+swapon -s /dev/mapper/vgcrypt-swap
+mount /dev/mapper/vgcrypt-root /mnt
 mkdir /mnt/{boot,home}
-mount /dev/mapper/vg-home /mnt/home
+mount /dev/mapper/vgcrypt-home /mnt/home
 mount /dev/sda1 /mnt/boot
 
 #Install base packages
