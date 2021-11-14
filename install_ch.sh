@@ -121,11 +121,11 @@ if [ $DESKTOPENV = "gnome" ]; then
     pacman -S gnome xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
-        su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
+        su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
     else
         if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
-            su su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
+            su $INSTALL_USER -c "yay -S nautilus-megasync megasync-bin"
         else
             echo "Not installing MEGAsync"
         fi
@@ -137,11 +137,11 @@ if [ $DESKTOPENV = "kdeplasma" ]; then
     pacman -S plasma dolphin kde-utilities xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
-        su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
+        su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
     else
         if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
-            su su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
+            su $INSTALL_USER -c "yay -S dolphin-megasync-bin megasync-bin"
         else
             echo "Not installing MEGAsync"
         fi
@@ -154,11 +154,11 @@ if [ $DESKTOPENV = "xfce4" ]; then
     pacman -S xfce4 xfce4-goodies lightdm lightdm-gtk-greeter network-manager-applet xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
-        su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+        su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
     else
         if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
-            su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+            su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
         else
             echo "Not installing MEGAsync"
         fi
@@ -170,11 +170,11 @@ if [ $DESKTOPENV = "i3" ]; then
     pacman -S i3-wm thunar rofi lightdm lightdm-gtk-greeter network-manager-applet xorg --needed --noconfirm
     if [ $MEGACONSENT = "y" ]; then
         echo "Installing MEGAsync"
-        su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+        su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
     else
         if [ $MEGACONSENT = "Y" ]; then
             echo "Installing MEGAsync"
-            su su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
+            su $INSTALL_USER -c "yay -S thunar-megasync-bin megasync-bin"
         else
             echo "Not installing MEGAsync"
         fi
